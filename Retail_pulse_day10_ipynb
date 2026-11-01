@@ -1,0 +1,756 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPRX4vi5YDbWbo+xpxSdzs7",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Mithhuu/Retail-pulse/blob/main/Retail_pulse_day10_ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Load the dataset"
+      ],
+      "metadata": {
+        "id": "pxGBhq77L7-V"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 602
+        },
+        "id": "Yx-A-3orLR2H",
+        "outputId": "82c02abd-3b4c-4a61-b097-6602a9f5bd96"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Dataset loaded successfully!\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "   Row ID        Order ID  Order Date   Ship Date       Ship Mode Customer ID  \\\n",
+              "0       1  CA-2016-152156  2016-11-08  2016-11-11    Second Class    CG-12520   \n",
+              "1       2  CA-2016-152156  2016-11-08  2016-11-11    Second Class    CG-12520   \n",
+              "2       3  CA-2016-138688  2016-06-12  2016-06-16    Second Class    DV-13045   \n",
+              "3       4  US-2015-108966  2015-10-11  2015-10-18  Standard Class    SO-20335   \n",
+              "4       5  US-2015-108966  2015-10-11  2015-10-18  Standard Class    SO-20335   \n",
+              "\n",
+              "     Customer Name    Segment        Country             City  ...  \\\n",
+              "0      Claire Gute   Consumer  United States        Henderson  ...   \n",
+              "1      Claire Gute   Consumer  United States        Henderson  ...   \n",
+              "2  Darrin Van Huff  Corporate  United States      Los Angeles  ...   \n",
+              "3   Sean O'Donnell   Consumer  United States  Fort Lauderdale  ...   \n",
+              "4   Sean O'Donnell   Consumer  United States  Fort Lauderdale  ...   \n",
+              "\n",
+              "  Postal Code  Region       Product ID         Category Sub-Category  \\\n",
+              "0       42420   South  FUR-BO-10001798        Furniture    Bookcases   \n",
+              "1       42420   South  FUR-CH-10000454        Furniture       Chairs   \n",
+              "2       90036    West  OFF-LA-10000240  Office Supplies       Labels   \n",
+              "3       33311   South  FUR-TA-10000577        Furniture       Tables   \n",
+              "4       33311   South  OFF-ST-10000760  Office Supplies      Storage   \n",
+              "\n",
+              "                                        Product Name     Sales  Quantity  \\\n",
+              "0                  Bush Somerset Collection Bookcase  261.9600         2   \n",
+              "1  Hon Deluxe Fabric Upholstered Stacking Chairs,...  731.9400         3   \n",
+              "2  Self-Adhesive Address Labels for Typewriters b...   14.6200         2   \n",
+              "3      Bretford CR4500 Series Slim Rectangular Table  957.5775         5   \n",
+              "4                     Eldon Fold 'N Roll Cart System   22.3680         2   \n",
+              "\n",
+              "   Discount    Profit  \n",
+              "0      0.00   41.9136  \n",
+              "1      0.00  219.5820  \n",
+              "2      0.00    6.8714  \n",
+              "3      0.45 -383.0310  \n",
+              "4      0.20    2.5164  \n",
+              "\n",
+              "[5 rows x 21 columns]"
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-186f7d7e-21d6-4361-91da-51c2b8282276\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>Row ID</th>\n",
+              "      <th>Order ID</th>\n",
+              "      <th>Order Date</th>\n",
+              "      <th>Ship Date</th>\n",
+              "      <th>Ship Mode</th>\n",
+              "      <th>Customer ID</th>\n",
+              "      <th>Customer Name</th>\n",
+              "      <th>Segment</th>\n",
+              "      <th>Country</th>\n",
+              "      <th>City</th>\n",
+              "      <th>...</th>\n",
+              "      <th>Postal Code</th>\n",
+              "      <th>Region</th>\n",
+              "      <th>Product ID</th>\n",
+              "      <th>Category</th>\n",
+              "      <th>Sub-Category</th>\n",
+              "      <th>Product Name</th>\n",
+              "      <th>Sales</th>\n",
+              "      <th>Quantity</th>\n",
+              "      <th>Discount</th>\n",
+              "      <th>Profit</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>1</td>\n",
+              "      <td>CA-2016-152156</td>\n",
+              "      <td>2016-11-08</td>\n",
+              "      <td>2016-11-11</td>\n",
+              "      <td>Second Class</td>\n",
+              "      <td>CG-12520</td>\n",
+              "      <td>Claire Gute</td>\n",
+              "      <td>Consumer</td>\n",
+              "      <td>United States</td>\n",
+              "      <td>Henderson</td>\n",
+              "      <td>...</td>\n",
+              "      <td>42420</td>\n",
+              "      <td>South</td>\n",
+              "      <td>FUR-BO-10001798</td>\n",
+              "      <td>Furniture</td>\n",
+              "      <td>Bookcases</td>\n",
+              "      <td>Bush Somerset Collection Bookcase</td>\n",
+              "      <td>261.9600</td>\n",
+              "      <td>2</td>\n",
+              "      <td>0.00</td>\n",
+              "      <td>41.9136</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>2</td>\n",
+              "      <td>CA-2016-152156</td>\n",
+              "      <td>2016-11-08</td>\n",
+              "      <td>2016-11-11</td>\n",
+              "      <td>Second Class</td>\n",
+              "      <td>CG-12520</td>\n",
+              "      <td>Claire Gute</td>\n",
+              "      <td>Consumer</td>\n",
+              "      <td>United States</td>\n",
+              "      <td>Henderson</td>\n",
+              "      <td>...</td>\n",
+              "      <td>42420</td>\n",
+              "      <td>South</td>\n",
+              "      <td>FUR-CH-10000454</td>\n",
+              "      <td>Furniture</td>\n",
+              "      <td>Chairs</td>\n",
+              "      <td>Hon Deluxe Fabric Upholstered Stacking Chairs,...</td>\n",
+              "      <td>731.9400</td>\n",
+              "      <td>3</td>\n",
+              "      <td>0.00</td>\n",
+              "      <td>219.5820</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>3</td>\n",
+              "      <td>CA-2016-138688</td>\n",
+              "      <td>2016-06-12</td>\n",
+              "      <td>2016-06-16</td>\n",
+              "      <td>Second Class</td>\n",
+              "      <td>DV-13045</td>\n",
+              "      <td>Darrin Van Huff</td>\n",
+              "      <td>Corporate</td>\n",
+              "      <td>United States</td>\n",
+              "      <td>Los Angeles</td>\n",
+              "      <td>...</td>\n",
+              "      <td>90036</td>\n",
+              "      <td>West</td>\n",
+              "      <td>OFF-LA-10000240</td>\n",
+              "      <td>Office Supplies</td>\n",
+              "      <td>Labels</td>\n",
+              "      <td>Self-Adhesive Address Labels for Typewriters b...</td>\n",
+              "      <td>14.6200</td>\n",
+              "      <td>2</td>\n",
+              "      <td>0.00</td>\n",
+              "      <td>6.8714</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>4</td>\n",
+              "      <td>US-2015-108966</td>\n",
+              "      <td>2015-10-11</td>\n",
+              "      <td>2015-10-18</td>\n",
+              "      <td>Standard Class</td>\n",
+              "      <td>SO-20335</td>\n",
+              "      <td>Sean O'Donnell</td>\n",
+              "      <td>Consumer</td>\n",
+              "      <td>United States</td>\n",
+              "      <td>Fort Lauderdale</td>\n",
+              "      <td>...</td>\n",
+              "      <td>33311</td>\n",
+              "      <td>South</td>\n",
+              "      <td>FUR-TA-10000577</td>\n",
+              "      <td>Furniture</td>\n",
+              "      <td>Tables</td>\n",
+              "      <td>Bretford CR4500 Series Slim Rectangular Table</td>\n",
+              "      <td>957.5775</td>\n",
+              "      <td>5</td>\n",
+              "      <td>0.45</td>\n",
+              "      <td>-383.0310</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>5</td>\n",
+              "      <td>US-2015-108966</td>\n",
+              "      <td>2015-10-11</td>\n",
+              "      <td>2015-10-18</td>\n",
+              "      <td>Standard Class</td>\n",
+              "      <td>SO-20335</td>\n",
+              "      <td>Sean O'Donnell</td>\n",
+              "      <td>Consumer</td>\n",
+              "      <td>United States</td>\n",
+              "      <td>Fort Lauderdale</td>\n",
+              "      <td>...</td>\n",
+              "      <td>33311</td>\n",
+              "      <td>South</td>\n",
+              "      <td>OFF-ST-10000760</td>\n",
+              "      <td>Office Supplies</td>\n",
+              "      <td>Storage</td>\n",
+              "      <td>Eldon Fold 'N Roll Cart System</td>\n",
+              "      <td>22.3680</td>\n",
+              "      <td>2</td>\n",
+              "      <td>0.20</td>\n",
+              "      <td>2.5164</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "<p>5 rows × 21 columns</p>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-186f7d7e-21d6-4361-91da-51c2b8282276')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-186f7d7e-21d6-4361-91da-51c2b8282276 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-186f7d7e-21d6-4361-91da-51c2b8282276');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "variable_name": "df"
+            }
+          },
+          "metadata": {},
+          "execution_count": 1
+        }
+      ],
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "df = pd.read_csv('/content/RetailPulse_Cleaned.csv')\n",
+        "\n",
+        "print(\"Dataset loaded successfully!\")\n",
+        "df.head()"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Identify the best-performing category"
+      ],
+      "metadata": {
+        "id": "orJhTFkMMIoh"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "category_performance = df.groupby('Category').agg({\n",
+        "    'Sales': 'sum',\n",
+        "    'Profit': 'sum',\n",
+        "    'Quantity': 'sum'\n",
+        "})\n",
+        "\n",
+        "print(category_performance)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5hg5G2UEMJWP",
+        "outputId": "06c50060-6c62-4a28-b057-dc6918e099c8"
+      },
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "                       Sales       Profit  Quantity\n",
+            "Category                                           \n",
+            "Furniture        741999.7953   18451.2728      8028\n",
+            "Office Supplies  719047.0320  122490.8008     22906\n",
+            "Technology       836154.0330  145454.9481      6939\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Find the best category by profit:"
+      ],
+      "metadata": {
+        "id": "LUAKy0bNMQIX"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "best_category = category_performance['Profit'].idxmax()\n",
+        "\n",
+        "print(\"Best Performing Category:\", best_category)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "wfI1-WSdMRNz",
+        "outputId": "e06c994e-2e6a-47ad-95c8-f8a6bab76e2a"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Best Performing Category: Technology\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Identify the most profitable region"
+      ],
+      "metadata": {
+        "id": "B3VlkPqSMV3V"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "region_performance = df.groupby('Region').agg({\n",
+        "    'Sales': 'sum',\n",
+        "    'Profit': 'sum'\n",
+        "})\n",
+        "\n",
+        "print(region_performance)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "hnAuU_pNMW7z",
+        "outputId": "ffda94f5-1278-473e-9bb6-4119b98b5603"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "               Sales       Profit\n",
+            "Region                           \n",
+            "Central  501239.8908   39706.3625\n",
+            "East     678781.2400   91522.7800\n",
+            "South    391721.9050   46749.4303\n",
+            "West     725457.8245  108418.4489\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Find the most profitable region"
+      ],
+      "metadata": {
+        "id": "Jlvkj4ynMbJD"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "best_region = region_performance['Profit'].idxmax()\n",
+        "\n",
+        "print(\"Most Profitable Region:\", best_region)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "MUCCdZNOMb2T",
+        "outputId": "f656e42e-a5a8-4022-c550-048c8005a0f7"
+      },
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Most Profitable Region: West\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Identify loss-making sub-categories\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "DIO6EtJ3MhXT"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "subcategory_profit = df.groupby('Sub-Category')['Profit'].sum()\n",
+        "\n",
+        "loss_making = subcategory_profit[subcategory_profit < 0]\n",
+        "\n",
+        "print(\"Loss-Making Sub-Categories:\")\n",
+        "print(loss_making)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "iHP7VIyXMnA-",
+        "outputId": "f689d9f9-2a76-4440-c9b4-fc01345ff8fb"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Loss-Making Sub-Categories:\n",
+            "Sub-Category\n",
+            "Bookcases    -3472.5560\n",
+            "Supplies     -1189.0995\n",
+            "Tables      -17725.4811\n",
+            "Name: Profit, dtype: float64\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Analyse the impact of discounts"
+      ],
+      "metadata": {
+        "id": "PWUq8FuRMrfW"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "discount_analysis = df.groupby('Discount').agg({\n",
+        "    'Sales': 'sum',\n",
+        "    'Profit': 'sum'\n",
+        "})\n",
+        "\n",
+        "print(discount_analysis)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "HUUw21unMs5s",
+        "outputId": "5ae03d18-310c-40d4-b8d7-6a278c06246b"
+      },
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "                 Sales       Profit\n",
+            "Discount                           \n",
+            "0.00      1.087908e+06  320987.6032\n",
+            "0.10      5.436935e+04    9029.1770\n",
+            "0.15      2.755852e+04    1418.9915\n",
+            "0.20      7.645944e+05   90337.3060\n",
+            "0.30      1.032267e+05  -10369.2774\n",
+            "0.32      1.449346e+04   -2391.1377\n",
+            "0.40      1.164178e+05  -23057.0504\n",
+            "0.45      5.484974e+03   -2493.1111\n",
+            "0.50      5.891854e+04  -20506.4281\n",
+            "0.60      6.644700e+03   -5944.6552\n",
+            "0.70      4.062028e+04  -40075.3569\n",
+            "0.80      1.696376e+04  -30539.0392\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Analyse customer segments"
+      ],
+      "metadata": {
+        "id": "vCLLDveBNLin"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "segment_analysis = df.groupby('Segment').agg({\n",
+        "    'Sales': 'sum',\n",
+        "    'Profit': 'sum',\n",
+        "    'Quantity': 'sum'\n",
+        "})\n",
+        "\n",
+        "print(segment_analysis)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "bQa_C3DkNMhR",
+        "outputId": "4cbe6894-0d29-48d6-9bb4-ea2d84c94b22"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "                    Sales       Profit  Quantity\n",
+            "Segment                                         \n",
+            "Consumer     1.161401e+06  134119.2092     19521\n",
+            "Corporate    7.061464e+05   91979.1340     11608\n",
+            "Home Office  4.296531e+05   60298.6785      6744\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "most profitable customer segment"
+      ],
+      "metadata": {
+        "id": "DrMT7879NWvF"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "best_segment = segment_analysis['Profit'].idxmax()\n",
+        "\n",
+        "print(\"Most Profitable Customer Segment:\", best_segment)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "fC58jO9-NYMJ",
+        "outputId": "cee24330-0f2b-4da0-91f1-2e69db135be9"
+      },
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Most Profitable Customer Segment: Consumer\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Calculate key business KPIs"
+      ],
+      "metadata": {
+        "id": "Kdn-pNsSNfBU"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "total_sales = df['Sales'].sum()\n",
+        "total_profit = df['Profit'].sum()\n",
+        "total_orders = df['Order ID'].nunique()\n",
+        "total_quantity = df['Quantity'].sum()\n",
+        "\n",
+        "profit_margin = (total_profit / total_sales) * 100\n",
+        "\n",
+        "print(\"Total Sales:\", round(total_sales, 2))\n",
+        "print(\"Total Profit:\", round(total_profit, 2))\n",
+        "print(\"Total Orders:\", total_orders)\n",
+        "print(\"Total Quantity Sold:\", total_quantity)\n",
+        "print(\"Profit Margin:\", round(profit_margin, 2), \"%\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-ia-7JvONfzG",
+        "outputId": "79173885-7258-4ad5-cdf7-36714eb37ec3"
+      },
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Total Sales: 2297200.86\n",
+            "Total Profit: 286397.02\n",
+            "Total Orders: 5009\n",
+            "Total Quantity Sold: 37873\n",
+            "Profit Margin: 12.47 %\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Retail Pulse – Business Insights**\n",
+        "\n",
+        " 1.category performance : highest profit technology .\n",
+        " 2. regional performance : west region making more profit.\n",
+        " 3 .product performance : loss making subcateries are bookcases ,tables ,supplies\n",
+        " 4. Discount Analysis: Excessive discounts reduce profit and can lead to losses. Businesses should offer discounts carefully to maintain profitability.\n",
+        "\n",
+        "\n",
+        " 5. customer segments :most profitable is comsumer segment\n"
+      ],
+      "metadata": {
+        "id": "Y7jiI6JIOBd7"
+      }
+    }
+  ]
+}

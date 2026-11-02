@@ -66,6 +66,24 @@ The dataset contains retail transaction information, including sales, profit, pr
 
 Retail Pulse demonstrates how Python can be used to analyse retail data, identify business performance patterns and generate meaningful insights that can support better business decisions.
 
+## Dashboard Visualizations
+
+### 1. Sales by Category
+![Sales by Category](screenshots/Sales_by_Category.png)
+
+### 2. Profit by Region
+![Profit by Region](screenshots/Profit_by_Region.png)
+
+### 3. Monthly Sales Trend
+![Monthly Sales Trend](screenshots/Monthly_Sales_Trend.png)
+
+### 4. Profit by Subcategory
+![Profit by Subcategory](screenshots/Profit_by_Subcategory.png)
+
+
 ## Author
 
 BCA Student | Aspiring Data Analyst & AI/ML Engineer
+
+
+
